@@ -1,0 +1,19 @@
+.parent {
+    padding: 5px;
+    background-color: #00AAFF;
+    width: 40%;
+  }
+
+  .child-one {
+    position: static;
+    top: 10px;
+    background-color: rgb(116, 255, 116);
+  }
+  
+  .child-two {
+    background-color: rgb(248, 117, 117);
+  }
+  
+  .child-three {
+    background-color: rgb(255, 116, 232);
+  }

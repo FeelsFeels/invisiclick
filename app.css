@@ -1,0 +1,122 @@
+body{
+    background-color: black;
+    color:whitesmoke;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    min-height: 90vh;
+    /* z-index: 1;
+    position: absolute;    
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0; */
+}
+
+#instructions {
+    margin-bottom: 25px;
+}
+
+.click-counter-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    border: 1px solid white;
+    width: 150px;
+    height: 93px;
+    font-size: 40px;
+    
+    overflow: hidden;
+    user-select: none;
+}
+
+#click-count{
+    position: absolute;
+    margin-bottom: 5px;
+}
+
+#click-button {
+    margin-top: 15px;
+    width: 100px;
+    height: 62px;
+    border: 2px solid white;
+    text-align: center;
+    padding-top: 18px;
+    user-select: none;
+
+    border-radius: 8px;
+
+    transition: transform 0.1s, border-color 0.1s, color 0.1s, box-shadow 0.1s;
+
+}
+
+#click-button:hover {    
+    cursor: pointer;
+}
+
+#click-button:active{
+    border-color: #d7d7d6;
+    color: whitesmoke;
+    box-shadow: 0 0.5em 0.5em -0.4em #4f4f4f;
+
+    transform: translateY(-0.10em);
+}
+
+.coverup {
+	position: absolute;
+    width: 150px;
+    height: 93px;
+	background: #333333;
+
+    z-index: 1;
+    transition: transform 1.5s ease-in;
+    transform: translateY(100%);
+}
+
+.coverup_display {
+    transform: translateY(0%);
+}
+
+.countdown {
+	position: absolute;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-radius: 3px;
+    padding-left: 3px;
+    padding-right: 1px;
+    font-size: 14px;
+    right: -1px;
+    bottom: 0px;
+    margin-bottom: 0px;
+    /* align-self: flex-end; */
+    /* text-align: end; */
+    /* bottom: 5px; */
+
+    z-index: 2;
+    transition: transform 0.3s;
+    transform: translateY(100%);
+}
+.countdown_display {
+    transform: translateY(0%);
+}
+
+.lives {
+    position: absolute;
+    border: 1px solid white;
+    border-radius: 3px;
+    right: 0px;
+    bottom: 0px;
+
+    padding: 5px;
+}
+
+#debug {
+    margin-bottom: 10px;
+}
