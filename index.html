@@ -9,10 +9,20 @@
     <link rel="stylesheet" href="app.css">
 </head>
 <body>
-    <h1 id="debug">Kokorokount</h1>
-    <button onclick="shiftClickButton()">change pos</button>
-    <button onclick="returnClickButtonToPosition()">return pos</button>
-    <div id="root">
+    <nav class="mainMenu opacity_on">
+        <h1>INVISICLICK</h1>
+        <ul>
+            <li onclick="InitGame(0)">CLASSIC</li>
+            <li onclick="InitGame(0)">SPEED</li>
+            <li onclick="InitGame(0)">฿Ɽ₳ł₦₣Ʉ₵₭</li>
+        </ul>
+    </nav>
+
+    <div class="root">
+        <h1 id="debug">Kokorokount</h1>
+        <button onclick="shiftClickButton()">change pos</button>
+        <button onclick="returnClickButtonToPosition()">return pos</button>
+        
         <div class="game">
             <div id="instructions">
                 Click on the button exactly once!

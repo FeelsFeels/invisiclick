@@ -1,3 +1,6 @@
+let mainMenu = document.querySelector('.mainMenu');
+let rootDiv = document.querySelector('.root');
+
 let clickCount = document.getElementById('click-count');
 let instructionsText = document.getElementById('instructions');
 let clickButton = document.getElementById('click-button');
@@ -19,6 +22,8 @@ function Counter(){
 
     this.level = 1;
     this.lives = 2;
+
+    this.gameType;
 }
 
 Counter.prototype.click = function (){
@@ -167,6 +172,16 @@ function hideCountdownDisplay(){
     countdownDisplay.classList.remove('countdown_display');
 }
 
+function InitGame(gameCode) {
+    game.gameType = gameCode;
+
+    //Some weird transition sequence I dont know of yet
+    mainMenu.classList.remove('opacity_on');
+    rootDiv.classList.add('opacity_on');
+
+}
+
+
 
 clickButton.addEventListener("click", ()=> {
     game.click();
@@ -174,7 +189,7 @@ clickButton.addEventListener("click", ()=> {
 
 
 
-debug.addEventListener("click", shiftClickButton);
+debug.addEventListener("click", restartGame);
 restartGame();
 
 // click-timer bottom-right-counter-enter bottom-right-counter-enter-active
