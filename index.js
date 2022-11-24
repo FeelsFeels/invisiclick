@@ -105,6 +105,16 @@ function gameLoop(){
     }
 }
 
+function shiftClickButton() {
+    clickButton.classList.add('click-button-shifted');
+    // let randtop = 10;
+    // clickButton.style.setProperty('position', 'absolute');
+    // clickButton.style.setProperty('top', 'absolute');
+}
+function returnClickButtonToPosition() {
+    // clickButton.classList.remove('click-button-shifted');
+}
+
 function nextLevel() {
     instructionsText.textContent = 'Click the button exactly ' + game.clicksNeeded + ' times!';
     game.count = 0;
@@ -137,7 +147,7 @@ clickButton.addEventListener("click", ()=> {
 
 
 
-debug.addEventListener("click", restartGame);
+debug.addEventListener("click", shiftClickButton);
 restartGame();
 
 // click-timer bottom-right-counter-enter bottom-right-counter-enter-active
