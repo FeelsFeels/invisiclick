@@ -15,6 +15,7 @@ function Counter(){
     this.clicksDisabled = false;
     this.isCountingDown = false;
     this.lastClicked;
+    this.countdownTimeModifier = 1;
 
     this.level = 1;
     this.lives = 2;
@@ -31,7 +32,7 @@ Counter.prototype.click = function (){
 
     if(this.inGame == false){
         this.inGame = true;
-        setTimeout(toggleNumberCover, 1300);
+        setTimeout(showNumberCover, 1300);
         requestAnimationFrame(gameLoop);
     }
 
@@ -45,14 +46,15 @@ Counter.prototype.checkClicks = function(){
     this.inGame = false;
     this.isCountingDown = false;
     this.clicksDisabled = true;
+
     
-    toggleCountdownDisplay();
-    toggleNumberCover();
+    hideNumberCover();
+    hideCountdownDisplay();
+
 
     if(this.count == this.clicksNeeded){
         instructionsText.textContent = "Well done!";
         this.level += 1;
-        this.clicksNeeded = this.level ** 2;
         setTimeout(nextLevel, 3000);
         
         this.lives = 2;
@@ -77,32 +79,39 @@ Counter.prototype.checkClicks = function(){
 
 function gameLoop(){
     if(game.inGame){
-        let timeSinceLastClicked = Date.now() - game.lastClicked;
-        // console.log(timeSinceLastClicked);
-        // console.log(Date.now(), game.lastClicked);
-
-        if(timeSinceLastClicked > 3000){
-            if(!game.isCountingDown){
-                toggleCountdownDisplay();
-                game.isCountingDown = true;
-
-            }
-            let timeLeft = 8000 - timeSinceLastClicked;
-            countdownDisplay.textContent = '0:0' + Math.ceil(timeLeft/1000);
-
-            if(timeLeft < 0) {
-                game.checkClicks();
-            }
-        }
-        else{
-            if(game.isCountingDown){
-                toggleCountdownDisplay();
-                game.isCountingDown = false;
-            }
-        }
+        countdown();
 
         requestAnimationFrame(gameLoop);
     }
+}
+
+function countdown() {
+
+    let timeSinceLastClicked = Date.now() - game.lastClicked;
+    let timeLeft = 8000 * game.countdownTimeModifier - timeSinceLastClicked;
+    console.log(timeLeft);
+
+    if(timeLeft < 0) {
+        game.checkClicks();
+        return;
+    }
+
+    if(timeSinceLastClicked > 3000){
+        if(!game.isCountingDown){
+            showCountdownDisplay();
+            game.isCountingDown = true;
+
+        }
+        countdownDisplay.textContent = '0:0' + Math.ceil(timeLeft/1000);
+
+    }
+    else{
+        if(game.isCountingDown){
+            hideCountdownDisplay();
+            game.isCountingDown = false;
+        }
+    }
+
 }
 
 function shiftClickButton() {
@@ -116,28 +125,46 @@ function returnClickButtonToPosition() {
 }
 
 function nextLevel() {
-    instructionsText.textContent = 'Click the button exactly ' + game.clicksNeeded + ' times!';
     game.count = 0;
     clickCount.textContent = 0;
 
+    game.countdownTimeModifier = 1;
+    if(game.level <= 4){
+        game.countdownTimeModifier = game.level / 6;
+    }
+
+    game.clicksNeeded = game.level ** 2;
     game.clicksDisabled = false;
+
+    if(game.clicksNeeded != 1){
+        instructionsText.textContent = 'Click the button exactly ' + game.clicksNeeded + ' times!';
+    }
+    else{
+        instructionsText.textContent = 'Click the button exactly once!';
+    }
 }
 
 
 function restartGame() {
-    console.log('reset_');
+    console.log('full reset_');
     clickCount.textContent = '0';
     instructionsText.textContent = 'Click the button exactly once!';
-    game.count = 0;
-    game.clicksNeeded = 1;
+    game.level = 1;
+    nextLevel();
 }
 
-function toggleNumberCover(){
-    numberCoverOverlay.classList.toggle('coverup_display');
+function showNumberCover(){
+    numberCoverOverlay.classList.add('coverup_display');
+}
+function hideNumberCover(){
+    numberCoverOverlay.classList.remove('coverup_display');
 }
 
-function toggleCountdownDisplay(){
-    countdownDisplay.classList.toggle('countdown_display');
+function showCountdownDisplay(){
+    countdownDisplay.classList.add('countdown_display');
+}
+function hideCountdownDisplay(){
+    countdownDisplay.classList.remove('countdown_display');
 }
 
 
