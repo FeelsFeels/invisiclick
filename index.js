@@ -31,7 +31,8 @@ Counter.prototype.click = function (){
     if(this.clicksDisabled){
         return;
     }
-    audioManager.click1.play();
+    // audioManager.click5.play();
+    audioManager.playClick();
 
     this.lastClicked = Date.now();
 
@@ -58,8 +59,10 @@ Counter.prototype.checkClicks = function(){
 
 
     if(this.count == this.clicksNeeded){
+        audioManager.lifeUp.play();
         instructionsText.textContent = "Well done!";
         this.level += 1;
+
         setTimeout(nextLevel, 3000);
         
         this.lives = 2;
@@ -67,34 +70,40 @@ Counter.prototype.checkClicks = function(){
     }
     else{
         //failed        
+        audioManager.lifeDown.play();
         game.lives -= 1 ;
         livesText.textContent = `Lives: ${game.lives}/2`;
         instructionsText.textContent = 'Level Failed!';
+
         if(this.lives > -1){
             setTimeout(nextLevel, 3000);
         }
         else{
             instructionsText.textContent = 'Game Over!';
         }
-
     }
-
 }
 
 
 function gameLoop(){
     if(game.inGame){
-        countdown();
+        if(game.gameType == 0){
+            countdown();            
+        }
+        
+        if(game.gameType == 1){
+            //supedo modo
+            countdown();
+        }
 
         requestAnimationFrame(gameLoop);
     }
 }
 
 function countdown() {
-
     let timeSinceLastClicked = Date.now() - game.lastClicked;
     let timeLeft = 8000 * game.countdownTimeModifier - timeSinceLastClicked;
-    console.log(timeLeft);
+    // console.log(timeLeft);
 
     if(timeLeft < 0) {
         game.checkClicks();
@@ -105,7 +114,6 @@ function countdown() {
         if(!game.isCountingDown){
             showCountdownDisplay();
             game.isCountingDown = true;
-
         }
         countdownDisplay.textContent = '0:0' + Math.ceil(timeLeft/1000);
 
@@ -129,24 +137,40 @@ function returnClickButtonToPosition() {
     // clickButton.classList.remove('click-button-shifted');
 }
 
-function nextLevel() {
+function readyLevel(){
     game.count = 0;
     clickCount.textContent = 0;
-
-    game.countdownTimeModifier = 1;
-    if(game.level <= 4){
-        game.countdownTimeModifier = game.level / 6;
-    }
-
-    game.clicksNeeded = game.level ** 2;
     game.clicksDisabled = false;
-
+    
     if(game.clicksNeeded != 1){
         instructionsText.textContent = 'Click the button exactly ' + game.clicksNeeded + ' times!';
     }
     else{
         instructionsText.textContent = 'Click the button exactly once!';
     }
+
+}
+
+function nextLevel() {
+    console.log(game.level);
+
+    if(game.gameType == 0){
+        game.countdownTimeModifier = 1;
+        if(game.level <= 4){
+            game.countdownTimeModifier = game.level / 6;
+        }
+        game.clicksNeeded = game.level ** 2;
+    }
+    
+    if(game.gameType == 1){
+        game.countdownTimeModifier = 1;
+
+        game.clicksNeeded = (game.level ** 2) + (Math.floor(Math.random() * game.level)) * (Math.round(Math.random()) ? 1 : -1);
+    
+    }
+
+    readyLevel();
+
 }
 
 
@@ -173,12 +197,24 @@ function hideCountdownDisplay(){
 }
 
 function InitGame(gameCode) {
+    
     game.gameType = gameCode;
+    if(gameCode == 0){
+        game.level = 1;
+    }
+    else{
+        game.level = 5;
+    }
 
-    //Some weird transition sequence I dont know of yet
+    //transition sequence from main menu to game
     mainMenu.classList.remove('opacity_on');
+    setTimeout(() => {
+        mainMenu.style.display = 'none';
+    }, 800);
     rootDiv.classList.add('opacity_on');
 
+    nextLevel();
+    
 }
 
 
@@ -190,6 +226,6 @@ clickButton.addEventListener("click", ()=> {
 
 
 debug.addEventListener("click", restartGame);
-restartGame();
+// restartGame();
 
 // click-timer bottom-right-counter-enter bottom-right-counter-enter-active
