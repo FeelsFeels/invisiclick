@@ -124,8 +124,7 @@ body{
 }
 .click-button-shifted {
     position: absolute;
-    transform: translate(100%, 100%);
-
+    transform: translate(100%, 100%);    
 }
 
 
@@ -146,7 +145,7 @@ body{
 	position: absolute;
     width: 150px;
     height: 93px;
-	background: #333333;
+	background: #272727;
 
     z-index: 1;
     transition: transform 1.5s ease-in;
@@ -177,6 +176,20 @@ body{
     transform: translateY(100%);
 }
 .countdown_display {
+    transform: translateY(0%);
+}
+
+.speed_countdown {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    line-height: 85px;
+    
+    z-index: 3;
+    transition: transform 1.5s ease-in;
+    transform: translateY(100%);
+}
+.speed_countdown_display {
     transform: translateY(0%);
 }
 

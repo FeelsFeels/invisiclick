@@ -18,7 +18,7 @@ AudioManager.prototype.loadSounds = function(){
     this.click3 = new Audio('sounds/click3.mp3');
     this.click4 = new Audio('sounds/click4.wav');
     this.click5 = new Audio('sounds/click5.wav');
-    this.lifeUp = new Audio('sounds/lifeUp.mp3');
+    this.lifeUp = new Audio('sounds/lifeUp.wav');
     this.lifeDown = new Audio('sounds/lifeDown.mp3');
 }
 

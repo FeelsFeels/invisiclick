@@ -4,21 +4,25 @@ let rootDiv = document.querySelector('.root');
 let clickCount = document.getElementById('click-count');
 let instructionsText = document.getElementById('instructions');
 let clickButton = document.getElementById('click-button');
-let debug = document.getElementById('debug');
 let numberCoverOverlay = document.querySelector('.coverup');
 let countdownDisplay = document.querySelector('.countdown');
+let speedModeCountdownDisplay = document.querySelector('.speed_countdown');
 let livesText = document.querySelector('.lives');
 
 
 let game = new Counter();
 function Counter(){
     this.count = 0;
+    this.countHidden = false;
     this.clicksNeeded = 0;
     this.inGame = false;
     this.clicksDisabled = false;
     this.isCountingDown = false;
+    this.timeOfFirstClick;
     this.lastClicked;
     this.countdownTimeModifier = 1;
+
+    this.speedModeTimeLimit;
 
     this.level = 1;
     this.lives = 2;
@@ -40,11 +44,22 @@ Counter.prototype.click = function (){
         this.inGame = true;
         setTimeout(showNumberCover, 1300);
         requestAnimationFrame(gameLoop);
+
+        if(this.gameType == 1){
+            this.timeOfFirstClick = Date.now();
+        }
+
+        setTimeout(() => {
+            if(this.inGame){
+                clickCount.textContent = 'ಠ_ಠ';
+            }
+        }, 3000);
     }
 
     this.count += 1;
-    console.log(this.count);
-    clickCount.textContent = this.count;
+    if(!this.countHidden){
+        clickCount.textContent = this.count;
+    }
 }
 
 Counter.prototype.checkClicks = function(){
@@ -76,7 +91,7 @@ Counter.prototype.checkClicks = function(){
         instructionsText.textContent = 'Level Failed!';
 
         if(this.lives > -1){
-            setTimeout(nextLevel, 3000);
+            setTimeout(readyLevel, 3000);
         }
         else{
             instructionsText.textContent = 'Game Over!';
@@ -93,7 +108,7 @@ function gameLoop(){
         
         if(game.gameType == 1){
             //supedo modo
-            countdown();
+            speedModeCountdown();
         }
 
         requestAnimationFrame(gameLoop);
@@ -103,7 +118,6 @@ function gameLoop(){
 function countdown() {
     let timeSinceLastClicked = Date.now() - game.lastClicked;
     let timeLeft = 8000 * game.countdownTimeModifier - timeSinceLastClicked;
-    // console.log(timeLeft);
 
     if(timeLeft < 0) {
         game.checkClicks();
@@ -126,6 +140,20 @@ function countdown() {
     }
 
 }
+
+
+function speedModeCountdown() {
+    let timeLeft = game.speedModeTimeLimit - (Date.now() - game.timeOfFirstClick);
+
+    speedModeCountdownDisplay.textContent = (timeLeft / 1000).toFixed(2).replace(".", ":");
+
+    if(timeLeft < 0){
+        speedModeCountdownDisplay.textContent = "0:00";
+        game.checkClicks();
+        return;
+    }
+}
+
 
 function shiftClickButton() {
     clickButton.classList.add('click-button-shifted');
@@ -152,7 +180,7 @@ function readyLevel(){
 }
 
 function nextLevel() {
-    console.log(game.level);
+    console.log("Level " + game.level);
 
     if(game.gameType == 0){
         game.countdownTimeModifier = 1;
@@ -163,7 +191,8 @@ function nextLevel() {
     }
     
     if(game.gameType == 1){
-        game.countdownTimeModifier = 1;
+        //for each level, 5 clicks/second is needed
+        game.speedModeTimeLimit = ((game.level ** 2) / 4.5) * 1000;
 
         game.clicksNeeded = (game.level ** 2) + (Math.floor(Math.random() * game.level)) * (Math.round(Math.random()) ? 1 : -1);
     
@@ -175,7 +204,6 @@ function nextLevel() {
 
 
 function restartGame() {
-    console.log('full reset_');
     clickCount.textContent = '0';
     instructionsText.textContent = 'Click the button exactly once!';
     game.level = 1;
@@ -183,10 +211,33 @@ function restartGame() {
 }
 
 function showNumberCover(){
+    if(!game.inGame){
+        return;
+    }
+
+    //2.8seconds for number to be fully hidden
+    //1.3s after first click for this function to run
+    setTimeout(() => {
+        if(game.inGame){
+            game.countHidden = true;
+        }
+        
+    }, 1500);
+
     numberCoverOverlay.classList.add('coverup_display');
+
+    if(game.gameType == 1){
+        speedModeCountdownDisplay.classList.add('speed_countdown_display')
+    }
 }
 function hideNumberCover(){
+    game.countHidden = false;
+    clickCount.textContent = game.count;
+    
     numberCoverOverlay.classList.remove('coverup_display');
+    if(game.gameType == 1){
+        speedModeCountdownDisplay.classList.remove('speed_countdown_display')
+    }
 }
 
 function showCountdownDisplay(){
@@ -225,7 +276,21 @@ clickButton.addEventListener("click", ()=> {
 
 
 
-debug.addEventListener("click", restartGame);
-// restartGame();
 
-// click-timer bottom-right-counter-enter bottom-right-counter-enter-active
+
+document.addEventListener("keydown", (key) => {
+	let code = key.code;
+	
+	if(code == 'KeyZ'){
+		if(key.repeat){
+			return;
+		}
+        game.click();
+	}
+	if(code == 'KeyX'){
+		if(key.repeat){
+			return;
+		}
+        game.click();
+	}
+});

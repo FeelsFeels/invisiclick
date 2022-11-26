@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Invisible Click</title>
     <link rel="stylesheet" href="bootstrap-5.2.2-dist\css\bootstrap.min.css">
     <link rel="stylesheet" href="app.css">
 </head>
@@ -19,9 +19,8 @@
     </nav>
 
     <div class="root">
-        <h1 id="debug">Kokorokount</h1>
-        <button onclick="shiftClickButton()">change pos</button>
-        <button onclick="returnClickButtonToPosition()">return pos</button>
+        <!-- <button onclick="shiftClickButton()">change pos</button>
+        <button onclick="returnClickButtonToPosition()">return pos</button> -->
         
         <div class="game">
             <div id="instructions">
@@ -29,6 +28,7 @@
             </div>
             <div class="click-counter-container">
                 <div class="coverup"></div>
+                <span class="speed_countdown">5:00</span>
                 <p class="countdown">0:05</p>
                 <div id="click-count">
                     0
